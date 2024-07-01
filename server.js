@@ -1,6 +1,7 @@
 const express =require('express')
 const app=express();
 const db= require("./db");
+const Guestrouter =require("./Routes/GuestRoutes")
 
 const Person = require('./Models/person')
 const { Guest, Room, Reservation, Payment, Staff } = require('./Models/personNew');
@@ -12,6 +13,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 
+app.use("/",Guestrouter)
 app.post('/person',async(req,res)=>{
     try{
         const data =req.body;
@@ -25,24 +27,6 @@ app.post('/person',async(req,res)=>{
         res.status(500).json({error:'Internal Server Error'})
     }
 })
-app.post('/Guest',async(req,res)=>{
-  try{
-    const Guestdata = req.body;
-    console.log(Guestdata)
-    const GuestRes = new Guest(Guestdata)
-  const response2 = await GuestRes.save();
-  console.log("Guest data saved ")
-  res.status(200).json({message:"Guest added successfully"})
-
-  }catch(err){
-    res.status(500).json({message:"Something went wrong"})
-  }
- 
-})
-
-
-
-
 app.post('/bulk-insert/person', async (req, res) => {
     try {
       const data = req.body; // Assuming req.body is an array of objects
@@ -121,22 +105,7 @@ app.delete('/persons_delete_many_data', upload.none(), async (req, res) => {
 
     }
   });
-  app.put('/guest_update',async(req,res)=>{
-    try{
-    const data2=req.body
-    console.log(data2);
-    const dataup2 = await Guest.findByIdAndUpdate(data2.id,data2,{ new: true });
-    console.log(dataup2)
-    if(!dataup2){
-      res.status(404).json({error:"Guest not found"});
-      
-    } console.log("guest updated");
-    res.status(200).json({message:"Guest updated successfully",data:dataup2})
-    }
-    catch(err){
-    res.status(500).json({error:"something went wrong"})
-    }
-    })
+ 
 
 app.post("/person", async(req,res)=>{
     try{
@@ -175,29 +144,22 @@ app.listen(3000,()=>{
     console.log("server is listening")
 })
 
-app.delete("/Guest_del",async(req,res)=>{
+app.get('/getperson/:worktype',async(req,res)=>{
   try{
-    const id = req.body.id
-    console.log(id)
-    const delguest = await Guest.findByIdAndDelete(id)
-    if(!delguest){
-      res.status(404).json({message:"Person not found"})
+    const worktype =req.params.worktype
+    // console.log(dataguest)
+    if(worktype ==='chief '|| worktype== 'waiter' ||worktype== 'manager'|| worktype=="cheif"){
+     
+      const data4 = await Person.find({work:worktype});
+      console.log(data4.length)
+      res.status(200).json(data4)
+
+    }else{
+      res.status(404).json({error:"Invalid work type"})
     }
-    console.log("Data deleted");
-    res.status(200).json({ message: 'Data deleted successfully' });
-  }catch(err){
-    res.status(200).json({ message: 'Something went wrong' });
-  }
-})
-
-app.get("/Guest_details",async(req,res)=>{
-  try{
-   const guest_data = await Guest.find()
-   if (!guest_data) {
-    return res.status(404).send();
-  }
     
-  }catch(err){
 
+  }catch(err){
+    res.status(500).json({error:"Something went wrong"})
   }
 })
