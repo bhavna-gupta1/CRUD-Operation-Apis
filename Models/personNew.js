@@ -6,7 +6,8 @@ const Schema = mongoose.Schema;
 const GuestSchema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    phone: { type: Number, required: true }
+    phone: { type: Number, required: true },
+  
   });
   
   // Room Schema

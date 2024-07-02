@@ -1,1 +1,69 @@
 
+pasport.use(new localstatgey(async(username,password,done){
+    try{
+     const user = await schema.findone({username:username})
+     if(!user)
+     return done(null,false,{message:"incorexct userame"})
+     const pasward = user.pasward ===password
+     if(!pasward)
+     return done(null,false,{mesg:"incorect pswrd"})
+    }else{
+        return(null,user)
+    }catch(err){
+        return done (err)
+    }
+}))
+
+
+app.use(passport.initilize())
+
+
+pasport.authenticate('local',{session:false})
+
+
+app.get("/getdetail",async(req,res)=>{
+  try{
+    const detail = await schmaname.find()
+    if(!detail){
+           return res.status(404).send();
+    }res.status(200).json(detail)
+  }catch(err){
+    res.statue(500).json({message:"internl server eror})
+  }  
+})
+
+app.post("/post",async(req,res)=>{
+    try{
+        const body =req.body
+        const a = new schnmaname(body)
+        const b=await a.save()
+
+    }
+})
+app.put('/put',async(req,res)=>{
+  try{
+const iup_d = req.body.id
+const update = await schmaname.findbydandupdate(iup_d.id,iup_d,{new:tue})
+if(!update)
+res.status(404).json({mesage:"person not found})
+
+  } res.statue(200).json({message:"updated sucefuly",data:update})
+  cach(err){
+res.staus(500).json({msg:"internl server error})
+  } 
+})
+
+app.delete('/del',sync(req,res)=>{
+    try{
+        const id = req.body.id
+      const deldata = await schmnae.findbyidanddelete(id)
+      if(!deldata){
+        res.status(404).json({message:"person nit found"})
+      }
+      res.status(200).json({mesage:"deleted sucfull"})
+
+    }catch(err){
+        res.status(500).json({message:"internl serever error"})
+    }
+})
+

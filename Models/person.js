@@ -14,7 +14,16 @@ const personSchema= new mongoose.Schema({
         type:String,
         enum:["chief","cheif","manager","waiter"],
         require:true
+    },
+    username:{
+        type:String,
+        require:true
+    },
+    password:{
+        type:String,
+        require:true
     }
+
 //     mobile:{
 //         type:Number,
 //         require:true

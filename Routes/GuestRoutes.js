@@ -5,9 +5,9 @@ const {Guest} = require("./../Models/personNew");
 // GET all guests
 router.get("/guests", async (req, res) => {
   try {
-    
+   
     const guest_data = await Guest.find();
-    console.log(guest_data);
+    // console.log(guest_data);
     if (guest_data.length === 0) {
       return res.status(404).json({ error: "No guests found" });
     }
@@ -23,6 +23,7 @@ router.post('/guests', async (req, res) => {
   try {
     const guestData = req.body;
     const newGuest = new Guest(guestData);
+    console.log(newGuest)
     const savedGuest = await newGuest.save();
     console.log("Guest data saved:", savedGuest);
     res.status(200).json({ message: "Guest added successfully", data: savedGuest });
