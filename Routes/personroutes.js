@@ -4,6 +4,7 @@ const Person = require("../Models/person")
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+const bcrypt = require('bcrypt');
 
 router2.post('/person',async(req,res)=>{
     try{
@@ -17,20 +18,7 @@ router2.post('/person',async(req,res)=>{
         console.log(err);
         res.status(500).json({error:'Internal Server Error'})
     }
-})
-router2.post('/bulk-insert/person', async (req, res) => {
-    try {
-      const data = req.body; // Assuming req.body is an array of objects
-      const insertedPersons = await Person.insertMany(data);
-
-      console.log(`${insertedPersons.length} persons inserted`);
-      res.status(200).json({ message: `${insertedPersons.length} persons inserted successfully` });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-
+  })
 router2.get('/get_person_details',async (req, res) => {
     try {
       const person = await Person.find()

@@ -1,10 +1,12 @@
 const express =require('express')
 const app=express();
+const mongoose=require('mongoose')
 const passport = require('./Routes/Auth')
 const db= require("./db");
 const Guestrouter =require("./Routes/GuestRoutes")
 const personrouter = require("./Routes/personroutes")
 const bodyParser = require('body-parser')
+const Person = require('./Models/person')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 const multer = require('multer');
@@ -23,8 +25,11 @@ next();
 }
 app.use(LogRequest)
 
-app.use("/",Guestrouter)
-app.use('/',personrouter)
+app.use("/",Guestrouter);
+app.use('/',localtoken,personrouter)
+
+
+
 
 app.listen(3000,()=>{
   console.log("server is listening")
