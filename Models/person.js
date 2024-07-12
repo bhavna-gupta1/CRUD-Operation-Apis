@@ -75,5 +75,7 @@ personSchema.methods.comparePassword = async function(candidatePassword) {
         throw err;
     }
 };
+
+
 const Person = mongoose.model('Person',personSchema)
 module.exports=Person;

@@ -26,7 +26,7 @@ next();
 app.use(LogRequest)
 
 app.use("/",Guestrouter);
-app.use('/',localtoken,personrouter)
+app.use('/',personrouter)
 
 
 

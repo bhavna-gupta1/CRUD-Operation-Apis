@@ -5,18 +5,43 @@ const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const bcrypt = require('bcrypt');
+const {jwtAuthMiddleware,generateToken} =require('../jwt')
 
-router2.post('/person',async(req,res)=>{
+router2.post('/signup',async(req,res)=>{
     try{
         const data =req.body;
-        console.log(data)
+        // console.log(data)
         const newPerson = new Person(data);
         const response = await newPerson.save();
         console.log("data saved");
-        res.status(200).json({ message: 'Data added successfully' });
+        const token = generateToken(response.username)
+        console.log("Token is :",token)
+
+        res.status(200).json({response:response,token:token});
     }catch(err){
         console.log(err);
         res.status(500).json({error:'Internal Server Error'})
+    }
+  })
+
+  router2.post('/login',async(req,res)=>{
+    try{
+const {username,password}=req.body;
+const user = await Person.findOne({username:username})
+
+if((!user )|| !(await user.comparePassword(password))){
+  res.status(401).json({Error:"Invalid username or password"})
+}
+// /geerate token
+const payload = {
+ id : user.id,
+ username:user.username
+}
+const token = generateToken(payload)
+res.json({token:token})
+
+    }catch(err){
+      res.status(500).json({message:"Internal Server Error"})
     }
   })
 router2.get('/get_person_details',async (req, res) => {
@@ -86,17 +111,7 @@ router2.delete('/persons_delete_many_data', upload.none(), async (req, res) => {
   });
  
 
-router2.post("/person", async(req,res)=>{
-    try{
-     const data = req.body;
-     const add_data = new Person(data)
-     
-    }
-    catch(err){
-
-    }
-})
-    
+ 
 
 router2.get('/first', (req, res) => {
   const obj1 = [
